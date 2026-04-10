@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CollecteController;
@@ -16,3 +18,7 @@ Route::post('/collectes', [CollecteController::class, 'store']);
 Route::get('/collectes', [CollecteController::class, 'index']);
 Route::get('/collectes/agent/{agentId}', [CollecteController::class, 'getByAgent']);
 Route::get('/collectes/{id}', [CollecteController::class, 'show']);
+// Créer le fichier SQLite s'il n'existe pas
+if (!File::exists(database_path('database.sqlite'))) {
+    File::put(database_path('database.sqlite'), '');
+}
