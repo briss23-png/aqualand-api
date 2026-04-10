@@ -22,3 +22,11 @@ Route::get('/collectes/{id}', [CollecteController::class, 'show']);
 if (!File::exists(database_path('database.sqlite'))) {
     File::put(database_path('database.sqlite'), '');
 }
+Route::get('/migrate', function () {
+    try {
+        \Artisan::call('migrate', ['--force' => true]);
+        return response()->json(['message' => 'Migration réussie', 'output' => \Artisan::output()]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
