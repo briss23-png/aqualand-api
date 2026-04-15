@@ -5,16 +5,18 @@ use Illuminate\Support\Facades\File;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CollecteController;
 
-// Créer le dossier database et le fichier SQLite s'ils n'existent pas
-if (!File::exists(database_path('database.sqlite'))) {
-    File::ensureDirectoryExists(database_path());
-    File::put(database_path('database.sqlite'), '');
+// Créer le fichier SQLite s'il n'existe pas
+$databasePath = database_path('database.sqlite');
+if (!File::exists($databasePath)) {
+    File::ensureDirectoryExists(dirname($databasePath));
+    File::put($databasePath, '');
 }
 
-// Route pour recréer la table collectes
-Route::get('/fix', function () {
-    if (!File::exists(database_path('database.sqlite'))) {
-        File::put(database_path('database.sqlite'), '');
+// Route pour initialiser la base de données
+Route::get('/setup', function () {
+    $databasePath = database_path('database.sqlite');
+    if (!File::exists($databasePath)) {
+        File::put($databasePath, '');
     }
     
     \DB::statement('PRAGMA foreign_keys=off;');
@@ -63,7 +65,7 @@ Route::get('/fix', function () {
         )
     ');
     \DB::statement('PRAGMA foreign_keys=on;');
-    return 'Table collectes recréée avec succès !';
+    return 'Base de données initialisée et table collectes créée !';
 });
 
 // Route de test
