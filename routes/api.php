@@ -72,6 +72,14 @@ Route::get('/setup', function () {
 Route::get('/test', function () {
     return response()->json(['message' => 'API fonctionne !']);
 });
+Route::get('/migrate-fresh', function () {
+    try {
+        \Artisan::call('migrate:fresh', ['--force' => true]);
+        return response()->json(['message' => 'Migration réussie', 'output' => \Artisan::output()]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
 
 // Routes normales
 Route::post('/register', [AuthController::class, 'register']);
