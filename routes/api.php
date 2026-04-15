@@ -13,17 +13,12 @@ if (!File::exists(database_path('database.sqlite'))) {
 
 // Route pour recréer la table collectes
 Route::get('/fix', function () {
-    // Vérifier que le fichier existe
     if (!File::exists(database_path('database.sqlite'))) {
         File::put(database_path('database.sqlite'), '');
     }
     
     \DB::statement('PRAGMA foreign_keys=off;');
-    
-    // Supprimer l'ancienne table si elle existe
     \DB::statement('DROP TABLE IF EXISTS collectes;');
-    
-    // Créer la nouvelle table
     \DB::statement('
         CREATE TABLE collectes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -67,7 +62,6 @@ Route::get('/fix', function () {
             updated_at TIMESTAMP
         )
     ');
-    
     \DB::statement('PRAGMA foreign_keys=on;');
     return 'Table collectes recréée avec succès !';
 });
