@@ -1,7 +1,8 @@
 FROM php:8.2-apache
 
-# Installer les extensions PHP nécessaires
+# Installer les extensions PHP nécessaires (Ajout de libpq-dev et des drivers pgsql)
 RUN apt-get update && apt-get install -y \
+    libpq-dev \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
@@ -10,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql zip
+    && docker-php-ext-install gd pdo pdo_pgsql pgsql zip
 
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
